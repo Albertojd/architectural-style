@@ -1,60 +1,61 @@
-from flask import Flask, request, redirect, url_for, send_from_directory
+from __future__ import division, print_function
+
+# Keras
+from keras.models import load_model
+from keras.applications.imagenet_utils import preprocess_input
+
+# Flask 
+from flask import Flask, request, render_template
 from werkzeug.utils import secure_filename
 
 import os
+import numpy as np
+import cv2
 
-UPLOAD_FOLDER = os.path.abspath("./uploads/")
-ALLOWED_EXTENSIONS = set(["png", "jpg", "jpge"])
+from keras.preprocessing.image import load_img, img_to_array
 
-def allowed_file(filename):
+from PIL import Image
 
-    return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
+names = ['Baroqoue','Byzantine','Egyptian','Gothic']
 
+# Definimos una instancia de Flask
 app = Flask(__name__)
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+# Path del modelo preentrenado
+MODEL_PATH = 'modelo/model.h5'
 
-@app.route("/")
+# Cargamos el modelo preentrenado
+model = load_model(MODEL_PATH)
+
+# Realizamos la predicción usando la imagen cargada y el modelo
+def model_predict(file_path, target_size=(64,64)):
+    img=load_img(file_path)
+    img = img.resize(target_size)
+    img=img_to_array(img)
+    img=np.expand_dims(img, axis=0) 
+    pred=model.predict(img) 
+    result=pred
+    style=names[np.argmax(result)]
+    return style
+
+@app.route('/', methods=['GET'])
 def index():
+    # Página principal
+    return render_template('index.html')
 
-    return "Architectural style recnigtion"
+@app.route('/predict', methods=['GET', 'POST'])
+def upload():
+    if request.method == 'POST':
+        # Obtiene el archivo del request
+        f = request.files['file']
 
-@app.route("/upload", methods=["GET", "POST"])
-def upload_file():
-    if request.method == "POST":
-        if not "file" in request.files:
-            return "No file part in the form."
-        f = request.files["file"]
-        if f.filename == "":
-            return "No file selected."
-        if f and allowed_file(f.filename):
-            filename = secure_filename(f.filename)
-            f.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
-            return redirect(url_for("get_file", filename=filename))
-        return "File not allowed."
+        # Graba el archivo en ./uploads
+        basepath = os.path.dirname(__file__)
+        file_path = os.path.join(
+            basepath, 'uploads', secure_filename(f.filename))
+        f.save(file_path)
+        preds = model_predict(file_path)              
+        return preds
+    return None
 
-    return """<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Select image</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <style type="text/css">
-    h1 {padding: 40px;text-align:left; background:#420021; color:white; font-size:35px}
-    </style>
-</head>
-<body>
-    <h1>Select image</h1>
-    <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <input type="submit" value="Upload">
-    </form>
-</body>
-</html>"""
-
-@app.route("/uploads/<filename>")
-def get_file(filename):
-
-    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
-
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True, threaded=False)
