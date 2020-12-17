@@ -1,16 +1,12 @@
 from __future__ import division, print_function
 
-# Keras
 from keras.models import load_model
 from keras.applications.imagenet_utils import preprocess_input
-
-# Flask 
 from flask import Flask, request, render_template
 from werkzeug.utils import secure_filename
 
 import os
 import numpy as np
-import cv2
 
 from keras.preprocessing.image import load_img, img_to_array
 
@@ -18,15 +14,12 @@ from PIL import Image
 
 names = ['Baroqoue','Byzantine','Egyptian','Gothic']
 
-# Definimos una instancia de Flask
-app = Flask(__name__)
-# Path del modelo preentrenado
-MODEL_PATH = 'modelo/model.h5'
 
-# Cargamos el modelo preentrenado
+app = Flask(__name__)
+
+MODEL_PATH = 'modelo/model.h5'
 model = load_model(MODEL_PATH)
 
-# Realizamos la predicción usando la imagen cargada y el modelo
 def model_predict(file_path, target_size=(64,64)):
     img=load_img(file_path)
     img = img.resize(target_size)
@@ -47,8 +40,7 @@ def upload():
     if request.method == 'POST':
         # Obtiene el archivo del request
         f = request.files['file']
-
-        # Graba el archivo en ./uploads
+        # Graba el archivo en ./uploads (main.js)
         basepath = os.path.dirname(__file__)
         file_path = os.path.join(
             basepath, 'uploads', secure_filename(f.filename))

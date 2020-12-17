@@ -1,10 +1,10 @@
-{% extends "Pagina.html" %} {% block content %}
+{% extends "web.html" %} {% block content %}
 
 <h2>Architectural Styles Classifier</h2>
 
 <div>
     <form id="upload-file" method="post" enctype="multipart/form-data">
-        <label for="imageUpload" class="upload-label">
+        <label for="imageUpload" class="btn btn-secondary">
             Select Image
         </label>
         <input type="file" name="file" id="imageUpload" accept=".png, .jpg, .jpeg">
@@ -16,7 +16,7 @@
             </div>
         </div>
         <div>
-            <button type="button" class="btn btn-success" id="btn-predict">Predicción</button>
+            <button type="button" class="btn btn-success" id="btn-predict">Predict</button>
         </div>
     </div>
 
