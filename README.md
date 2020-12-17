@@ -21,7 +21,7 @@ Las redes neuronales están diseñados para imitar el comportamiento del cerebro
 
 Para construir la arquitectura de nuestro red convuncional hemos usado la biblioteca keras, en esta caso hemos diseñado 3 capas para entrenar el modelo
 
-![solarized dualmode](./images/Captura.png)
+![ScreenShot](Images/Captura.PNG)
 
 ## Entrenamiento:
 
