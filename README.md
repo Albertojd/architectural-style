@@ -31,8 +31,8 @@ Para mejorar el modelo no solo hemos mejorado las capas, si no que he multiplica
 
 En las siguientes gráficas podemos ver como avanza el entranmiento hacía un mejor acurracy, y un menor loss:
 
-![solarized dualmode](/images/accuracy.png)
-![solarized dualmode](/images/loss.png)
+![ScreenShot](Images/accuracy.png)
+![ScreenShot](Images/loss.png)
 
 ## Flask:
 
@@ -40,4 +40,4 @@ En este paso creamos una pequeña web, valiendonos de Flask.
 
 Esta web carga nuestro modelo de predicción junto a una imagen y nos devolverá el estilo al que pertenece 
 
-![solarized dualmode](/images/webexample.png)
+![ScreenShot](Images/webexample.png)
