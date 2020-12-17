@@ -40,4 +40,4 @@ En este paso creamos una pequeña web, valiendonos de Flask.
 
 Esta web carga nuestro modelo de predicción junto a una imagen y nos devolverá el estilo al que pertenece 
 
-![ScreenShot](Images/webexample.png)
+![ScreenShot](Images/webexample.PNG)
